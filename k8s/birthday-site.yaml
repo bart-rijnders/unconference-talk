@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: birthday-site
+  namespace: default
+spec:
+  replicas: 50
+  selector:
+    matchLabels:
+      app: birthday-site
+  template:
+    metadata:
+      labels:
+        app: birthday-site
+    spec:
+      containers:
+        - name: app
+          image: bartrijnders14/birthday
+          ports:
+            - name: web
+              containerPort: 80
+              protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: birthday-site
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: birthday-site
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: web
